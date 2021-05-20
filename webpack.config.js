@@ -2,27 +2,32 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
 module.exports = (env) => {
-  console.log(env);
   const config = {
     entry: {
-      vendors: ["react", "react-dom", "react-router-dom"],
+      // vendors: ["react", "react-dom", "react-router-dom"],
       main: {
         import: path.resolve("src", "index.js"),
-        dependOn: "vendors",
+        // dependOn: "vendors",
       },
-      about: {
-        import: path.resolve("src", "components", "about.jsx"),
-        dependOn: "vendors",
-      },
-      profile: {
-        import: path.resolve("src", "components", "profile.jsx"),
-        dependOn: "vendors",
-      },
+      // about: {
+      //   import: path.resolve("src", "components", "about.jsx"),
+      //   dependOn: "main",
+      // },
+      // profile: {
+      //   import: path.resolve("src", "components", "profile.jsx"),
+      //   dependOn: "main",
+      // },
     },
     output: {
       path: path.resolve("build"),
-      filename: "js/[name].[chunkhash].js",
-      publicPath: "/",
+      filename: "[name].js",
+    },
+    // [optimization.splitChunks.chunks = 'all'] is a way of saying :
+    //  “put everything in node_modules into a file called vendors~main.js".
+    optimization: {
+      splitChunks: {
+        chunks: "all",
+      },
     },
     devServer: {
       contentBase: path.resolve("build"),

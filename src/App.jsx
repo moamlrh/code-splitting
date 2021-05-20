@@ -1,21 +1,22 @@
 import React from "react";
 import { Route, Switch } from "react-router";
+import Home from "./components/home";
 
 const About = React.lazy(() => import("./components/about"));
+// const Profile = React.lazy(() => import("./components/profile"));
 
-const Home = React.lazy(() => import("./components/home"));
-
-const Profile = React.lazy(() => import("./components/profile"));
+// import About from "./components/about";
+import Profile from "./components/profile";
 
 function App() {
   return (
     <div>
+      <Home />
       <Switch>
-        <React.Suspense fallback={() => <h1>Loading ...</h1>}>
-          <Route path="/" exact component={Home} />
+        <React.Suspense fallback={<h1>Loading ...</h1>}>
           <Route path="/about" exact component={About} />
-          <Route path="/profile" exact component={Profile} />
         </React.Suspense>
+        <Route path="/profile" exact component={Profile} />
       </Switch>
     </div>
   );
