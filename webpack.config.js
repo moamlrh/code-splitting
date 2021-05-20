@@ -4,10 +4,25 @@ const path = require("path");
 module.exports = (env) => {
   console.log(env);
   const config = {
-    entry: path.resolve("src", "index.js"),
+    entry: {
+      vendors: ["react", "react-dom", "react-router-dom"],
+      main: {
+        import: path.resolve("src", "index.js"),
+        dependOn: "vendors",
+      },
+      about: {
+        import: path.resolve("src", "components", "about.jsx"),
+        dependOn: "vendors",
+      },
+      profile: {
+        import: path.resolve("src", "components", "profile.jsx"),
+        dependOn: "vendors",
+      },
+    },
     output: {
       path: path.resolve("build"),
-      filename: "[name].bundle.js",
+      filename: "js/[name].[chunkhash].js",
+      publicPath: "/",
     },
     devServer: {
       contentBase: path.resolve("build"),
@@ -15,6 +30,7 @@ module.exports = (env) => {
       hot: true,
       historyApiFallback: true,
     },
+    devtool: false,
     module: {
       rules: [
         {
@@ -38,6 +54,10 @@ module.exports = (env) => {
               },
             },
           ],
+        },
+        {
+          test: /\.(png|jpg|jpeg)$/i,
+          type: "asset/resource",
         },
       ],
     },

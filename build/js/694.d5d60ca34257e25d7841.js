@@ -1,0 +1,1 @@
+(self.webpackChunk=self.webpackChunk||[]).push([[694],{694:(e,r,s)=>{"use strict";s.r(r),s.d(r,{default:()=>n}),s(294);var t=s(727),i=s(893);const n=function(){return(0,i.jsxs)("div",{children:[(0,i.jsx)("h1",{children:"it's Home page "}),(0,i.jsx)(t.rU,{to:"/about",children:"About"}),(0,i.jsx)(t.rU,{to:"/profile",children:"profile"})]})}}}]);

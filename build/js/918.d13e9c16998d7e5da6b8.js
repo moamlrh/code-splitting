@@ -1,0 +1,1 @@
+(self.webpackChunk=self.webpackChunk||[]).push([[918],{918:(s,e,i)=>{"use strict";i.r(e),i.d(e,{default:()=>c}),i(294);var r=i(410),t=i(893);const c=function(){return(0,t.jsxs)("div",{children:[(0,t.jsx)("h1",{children:"This is Profile Page "}),(0,t.jsx)("img",{src:r,alt:"this is"})]})}},410:(s,e,i)=>{"use strict";s.exports=i.p+"70314aede4c084f2ea66.jpg"}}]);
