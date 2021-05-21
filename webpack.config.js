@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const WebpackBundleAnalyzer =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = (env) => {
   const config = {
@@ -71,7 +73,7 @@ module.exports = (env) => {
         },
         {
           test: /\.(png|jpg|jpeg)$/i,
-          type: "asset/resource",
+          type: "asset",
         },
       ],
     },
@@ -80,6 +82,7 @@ module.exports = (env) => {
         template: path.join("public", "index.html"),
         inject: "body",
       }),
+      new WebpackBundleAnalyzer(),
     ],
   };
 
