@@ -4,7 +4,9 @@ const WebpackBundleAnalyzer =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = (env) => {
+  console.log(env);
   const config = {
+    mode: env.mode,
     entry: path.resolve("src", "index.js"),
     //  {
     // vendors: ["react", "react-dom", "react-router-dom"],
@@ -82,8 +84,8 @@ module.exports = (env) => {
         template: path.join("public", "index.html"),
         inject: "body",
       }),
-      new WebpackBundleAnalyzer(),
-    ],
+      env.mode === "development" && new WebpackBundleAnalyzer(),
+    ].filter(Boolean),
   };
 
   return config;
