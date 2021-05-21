@@ -2,31 +2,14 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const WebpackBundleAnalyzer =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const CompressionPlugin = require("compression-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env) => {
   console.log(env);
   const config = {
     mode: env.mode,
     entry: path.resolve("src", "index.js"),
-    //  {
-    // vendors: ["react", "react-dom", "react-router-dom"],
-    // main: {
-    // import: path.resolve("src", "index.js"),
-    // dependOn: "vendors",
-    // },
-    // app: {
-    //   import: path.resolve("src", "App.jsx"),
-    //   dependOn: "main",
-    // },
-    // about: {
-    //   import: path.resolve("src", "components", "about.jsx"),
-    //   dependOn: "main",
-    // },
-    // profile: {
-    //   import: path.resolve("src", "components", "profile.jsx"),
-    //   dependOn: "main",
-    // },
-    // },
     output: {
       path: path.resolve("build"),
       filename: "[name].js",
@@ -35,14 +18,30 @@ module.exports = (env) => {
     // [optimization.splitChunks.chunks = 'all'] is a way of saying :
     //  “put everything in node_modules into a file called vendors~main.js".
     optimization: {
+      runtimeChunk: "single",
+      minimize: true,
+      minimizer: [new TerserPlugin({ test: /\.js(\?.*)?$/i })],
       splitChunks: {
-        maxSize: 100000, // in bytes
+        // maxSize: 100000, // in bytes
         cacheGroups: {
+          default: {
+            minChunks: 3,
+            reuseExistingChunk: true,
+          },
           react: {
             // test: /[\\/]node_modules[\\/]/, bundl all modules
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/, // specific module
-            name: "react",
-            chunks: "all",
+            test: /[\\/]node_modules[\\/](react)[\\/]/, // specific module
+            name: "vendor-react",
+            chunks: "initial",
+            enforce: true,
+          },
+
+          reactDom: {
+            // test: /[\\/]node_modules[\\/]/, bundl all modules
+            test: /[\\/]node_modules[\\/](react-dom)[\\/]/, // specific module
+            name: "vendor-react-dom",
+            chunks: "initial",
+            enforce: true,
           },
         },
       },
@@ -93,6 +92,7 @@ module.exports = (env) => {
         inject: "body",
       }),
       env.mode === "development" && new WebpackBundleAnalyzer(),
+      env.mode === "production" && new CompressionPlugin(),
     ].filter(Boolean),
   };
 
