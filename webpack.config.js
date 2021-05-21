@@ -36,7 +36,7 @@ module.exports = (env) => {
     //  “put everything in node_modules into a file called vendors~main.js".
     optimization: {
       splitChunks: {
-        maxSize: 10000,
+        maxSize: 100000, // in bytes
         cacheGroups: {
           react: {
             // test: /[\\/]node_modules[\\/]/, bundl all modules
