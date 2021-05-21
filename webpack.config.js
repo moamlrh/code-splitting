@@ -4,11 +4,15 @@ const WebpackBundleAnalyzer =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const CompressionPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CleanPlugin = require("clean-webpack-plugin");
 
 module.exports = (env) => {
-  console.log(env);
+  const mode = env.mode;
+  const isDev = mode === "development";
+  const isProd = mode === "production";
+
   const config = {
-    mode: env.mode,
+    mode: mode,
     entry: path.resolve("src", "index.js"),
     output: {
       path: path.resolve("build"),
@@ -22,7 +26,7 @@ module.exports = (env) => {
       minimize: true,
       minimizer: [new TerserPlugin({ test: /\.js(\?.*)?$/i })],
       splitChunks: {
-        // maxSize: 100000, // in bytes
+        // maxSize: 100000, // in beytes
         cacheGroups: {
           default: {
             minChunks: 3,
@@ -52,7 +56,7 @@ module.exports = (env) => {
       hot: true,
       historyApiFallback: true,
     },
-    devtool: false,
+    devtool: isDev ? "inline-source-map" : false,
     experiments: {
       topLevelAwait: true,
     },
@@ -87,12 +91,13 @@ module.exports = (env) => {
       ],
     },
     plugins: [
+      new CleanPlugin.CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: path.join("public", "index.html"),
         inject: "body",
       }),
-      env.mode === "development" && new WebpackBundleAnalyzer(),
-      env.mode === "production" && new CompressionPlugin(),
+      isDev && new WebpackBundleAnalyzer(),
+      isProd && new CompressionPlugin(),
     ].filter(Boolean),
   };
 
