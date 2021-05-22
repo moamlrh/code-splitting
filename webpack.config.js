@@ -5,6 +5,8 @@ const WebpackBundleAnalyzer =
 const CompressionPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CleanPlugin = require("clean-webpack-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (env) => {
   const mode = env.mode;
@@ -16,15 +18,28 @@ module.exports = (env) => {
     entry: path.resolve("src", "index.js"),
     output: {
       path: path.resolve("build"),
-      filename: "[name].js",
-      chunkFilename: "[name].chunk.js",
+      filename: "[name].[contenthash].js",
+      chunkFilename: "[name].[contenthash].chunk.js",
     },
     // [optimization.splitChunks.chunks = 'all'] is a way of saying :
     //  “put everything in node_modules into a file called vendors~main.js".
     optimization: {
       runtimeChunk: "single",
       minimize: true,
-      minimizer: [new TerserPlugin({ test: /\.js(\?.*)?$/i })],
+      minimizer: [
+        new TerserPlugin({
+          test: /\.js(\?.*)?$/i,
+          parallel: true,
+        }),
+        new OptimizeCssAssetsPlugin({
+          cssProcessorOptions: {
+            map: {
+              inline: false,
+              annotation: true,
+            },
+          },
+        }),
+      ],
       splitChunks: {
         // maxSize: 100000, // in beytes
         cacheGroups: {
@@ -84,9 +99,14 @@ module.exports = (env) => {
             },
           ],
         },
+
         {
           test: /\.(png|jpg|jpeg)$/i,
           type: "asset",
+        },
+        {
+          test: /\.css$/,
+          use: [{ loader: new MiniCssExtractPlugin().loader }, "css-loader"],
         },
       ],
     },
